@@ -42,10 +42,15 @@ The architecture flow will be like this;
 Create VPC --> Subnet --> Route Tables & Internet Gateway --> EC2 --> Deploy Docker container --> Security Group
 
 ### Authenticate to Provider(AWS)
-- Create a file named ``main.tf`` which contain all the terraform configuration.
-Using the I AM user role crendentials created from AWS, I use this to authentication into AWS and authorize terraform to provision the following infrastructure.
-To use remote backend, remote state, I must first initialise with local afterwhich I then rerun with remote backend. Below is my first lines of defination inside the terraform file;
-![first-tf](docs/assets/first-line.png)
+- I created a file named ``main.tf`` which contain all the terraform configuration for this project.
+- Using the I AM user role credentials created from AWS, terraform authenticate into AWS and authorize to provision the above infrastructures.
+- Remote backend; To use remote backend, I first ``terraform init`` and ``terraform apply`` inside the folder for local backend afterwhich I then rerun with remote backend. Below is my first lines of defination inside the `main.tf` file;
+![tf-first](docs/assets/tf-first.png)
+Then initialise with `terraform init` and `terraform apply`;
+![tf-init](docs/assets/tf-init.png)
+Switched to remote backend after adding the same to the file with `terraform init` and `terraform apply`;
+![tf-remote](docs/assets/tf-remote.png)
+
 
 
 
