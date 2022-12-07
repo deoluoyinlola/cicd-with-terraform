@@ -10,12 +10,13 @@ The flow will follow the same architecture below;
   * [Pipeline with GitHub Actions](#pipeline-with-github-aactions)
   * [Check with DockerHub](#check-with-dockerhub)
 * [IAC With Terraform](#iac-with-terraform)
+  * [Authenticate to Provider](#authenticate-to-provider)
 
 ## Hands-on
 From the architecture flow shown above;
 Git --> GitHub --> GitHub Actions --> Build --> Push to DockerHub --> Terraform --> AWS Resources.
 ## Continous Integration
-A simple profile app developing with Nodejs and MongoDB & Mongo-Express for handling data persistence. I choose Docker-compose to run these services, while build the image with GitHub Actions and get push to DockerHub.
+A simple wait list app developing with html, css and js. While build the Docker image with GitHub Actions and get push to DockerHub.
 Here is the project file structure; 
 ![file structure](assets/file-structure.png)
 
@@ -54,13 +55,13 @@ Both S3 and DynamoDb table created, serving as container for storing remote back
 ![tf-s3](assets/tf-s3.png)
 ![tf-dyno](assets/tf-dyno.png)
 
+### Provisioning Basic Infrastrucure
+- Variable; I set separate list of variables for AZ as a set, name tag for every component created I give it a prefix of environment that will be deploy in(using variable inside string).
+- Trying to check if this config working, first deploy VPC and subnet;
+![vpc](assets/vpc.png)
+And the subnet;
+![subnet](assets/subnet.png)
 
- 
-
-
- variable vpc_cidr_block {}
-variable subnet_1_cidr_block {}
-variable avail_zone {}
 variable env_prefix {}
 variable instance_type {}
 variable ssh_key {}
@@ -85,21 +86,6 @@ output "ami_id" {
   value = data.aws_ami.amazon-linux-image.id
 }
 
-resource "aws_vpc" "myapp-vpc" {
-  cidr_block = var.vpc_cidr_block
-  tags = {
-      Name = "${var.env_prefix}-vpc"
-  }
-}
-
-resource "aws_subnet" "myapp-subnet-1" {
-  vpc_id = aws_vpc.myapp-vpc.id
-  cidr_block = var.subnet_1_cidr_block
-  availability_zone = var.avail_zone
-  tags = {
-      Name = "${var.env_prefix}-subnet-1"
-  }
-}
 
 resource "aws_security_group" "myapp-sg" {
   name   = "myapp-sg"
