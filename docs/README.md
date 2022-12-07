@@ -66,13 +66,12 @@ Both S3 and DynamoDb table created, serving as container for storing remote back
 And the subnet;
 ![subnet](assets/subnet.png)
 - Created route table, Subnet association with route table.
-- Security group; I configure firewall rules of the EC2 instance, where I just expose port 22 and 
-Your IP: 102.88.63.51
+- Security group; I configure firewall rules of the EC2 instance, where I just expose port 22 for ssh, tcp at 8080 and outbound rule at any.
 
 variable env_prefix {}
 variable instance_type {}
 variable ssh_key {}
-variable my_ip {}
+
 
 data "aws_ami" "amazon-linux-image" {
   most_recent = true
