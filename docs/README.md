@@ -10,7 +10,10 @@ The flow will follow the same architecture below;
   * [Pipeline with GitHub Actions](#pipeline-with-github-aactions)
   * [Check with DockerHub](#check-with-dockerhub)
 * [IAC With Terraform](#iac-with-terraform)
-  * [Authenticate to Provider](#authenticate-to-provider)
+  * [Authenticate to Provider(AWS)](#authenticate-to-provider)
+  * [Provisioning Basic Infrastrucure](#provisioning-basic-infrastrucure)
+  
+
 
 ## Hands-on
 From the architecture flow shown above;
@@ -56,11 +59,15 @@ Both S3 and DynamoDb table created, serving as container for storing remote back
 ![tf-dyno](assets/tf-dyno.png)
 
 ### Provisioning Basic Infrastrucure
+- Worth of note that terraform is smart enough to create componemt accrodingly even when the defination is out of order/sequence.
 - Variable; I set separate list of variables for AZ as a set, name tag for every component created I give it a prefix of environment that will be deploy in(using variable inside string).
 - Trying to check if this config working, first deploy VPC and subnet;
 ![vpc](assets/vpc.png)
 And the subnet;
 ![subnet](assets/subnet.png)
+- Created route table, Subnet association with route table.
+- Security group; I configure firewall rules of the EC2 instance, where I just expose port 22 and 
+Your IP: 102.88.63.51
 
 variable env_prefix {}
 variable instance_type {}
@@ -118,34 +125,9 @@ resource "aws_security_group" "myapp-sg" {
   }
 }
 
-resource "aws_internet_gateway" "myapp-igw" {
-	vpc_id = aws_vpc.myapp-vpc.id
-    
-    tags = {
-     Name = "${var.env_prefix}-internet-gateway"
-   }
-}
 
-resource "aws_route_table" "myapp-route-table" {
-   vpc_id = aws_vpc.myapp-vpc.id
 
-   route {
-     cidr_block = "0.0.0.0/0"
-     gateway_id = aws_internet_gateway.myapp-igw.id
-   }
 
-   # default route, mapping VPC CIDR block to "local", created implicitly and cannot be specified.
-
-   tags = {
-     Name = "${var.env_prefix}-route-table"
-   }
- }
-
-# Associate subnet with Route Table
-resource "aws_route_table_association" "a-rtb-subnet" {
-  subnet_id      = aws_subnet.myapp-subnet-1.id
-  route_table_id = aws_route_table.myapp-route-table.id
-}
 
 resource "aws_key_pair" "ssh-key" {
   key_name   = "myapp-key"

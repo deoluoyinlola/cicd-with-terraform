@@ -1,4 +1,5 @@
 # Ignore any files or directories at any level, including the context root named node_modules
 **.terraform/
 
+*.tfvars
 .DS_Store
