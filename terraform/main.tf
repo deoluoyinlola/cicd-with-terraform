@@ -57,7 +57,8 @@ variable vpc_cidr_block {}
 variable subnet_1_cidr_block {}
 variable avail_zone {}
 variable env_prefix {}
-
+variable instance_type {}
+variable ssh_key {}
 variable my_ip {}
 
 
@@ -156,24 +157,34 @@ output "ami_id" {
   value = data.aws_ami.amazon-linux-image.id
 }
 
-# resource "aws_instance" "myapp-server" {
-#   ami                         = data.aws_ami.amazon-linux-image.id
-#   instance_type               = var.instance_type
-#   key_name                    = "myapp-key"
-#   associate_public_ip_address = true
-#   subnet_id                   = aws_subnet.myapp-subnet-1.id
-#   vpc_security_group_ids      = [aws_security_group.myapp-sg.id]
-#   availability_zone			      = var.avail_zone
+output "server-ip" {
+    value = aws_instance.myapp-server.public_ip
+}
 
-#   tags = {
-#     Name = "${var.env_prefix}-server"
-#   }
+resource "aws_key_pair" "ssh-key" {
+  key_name   = "tf-server-key"
+  public_key = file(var.ssh_key)
+}
 
-#   user_data = <<EOF
-#                  #!/bin/bash
-#                  apt-get update && apt-get install -y docker-ce
-#                  systemctl start docker
-#                  usermod -aG docker ec2-user
-#                  docker run -p 8080:8080 nginx
-#               EOF
-# }
+resource "aws_instance" "myapp-server" {
+  ami                         = data.aws_ami.amazon-linux-image.id
+  instance_type               = var.instance_type
+  key_name                    = "tf-server-key"
+  associate_public_ip_address = true
+  subnet_id                   = aws_subnet.myapp-subnet-1.id
+  vpc_security_group_ids      = [aws_security_group.myapp-sg.id]
+  availability_zone			      = var.avail_zone
+
+  tags = {
+    Name = "${var.env_prefix}-server"
+  }
+
+  # Below are optional, for user data entry perhaps I choose to install service like nginx at creation.
+  # In the same way I will have achieve this on the shell!
+  # user_data = <<EOF
+  #                #!/bin/bash
+  #                apt-get update && apt-get install -y nginx
+  #                systemctl start ngnix
+  #                usermod -aG docker ec2-user
+  #             EOF
+}
