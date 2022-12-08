@@ -12,6 +12,7 @@ The flow will follow the same architecture below;
 * [IAC With Terraform](#iac-with-terraform)
   * [Authenticate to Provider(AWS)](#authenticate-to-provider)
   * [Provisioning Basic Infrastrucure](#provisioning-basic-infrastrucure)
+  * [Creating EC2 Instance](#Creating-ec2-instance)
   
 
 
@@ -68,61 +69,21 @@ And the subnet;
 - Created route table, Subnet association with route table.
 - Security group; I configure firewall rules of the EC2 instance, where I just expose port 22 for ssh, tcp at 8080 and outbound rule at any.
 
-variable env_prefix {}
+### Creating EC2 Instance
+- I choose Amazon Machine Image of Linux distribution, dynamically using its AMI ID value in the desire region all defined in the data block, check image below;
+![ami-data](assets/ami-data.png)
+When checked to know if it same with desire AMI, output on the terminal before actual deployment;
+![ami-check](assets/ami-check.png)
+
+
 variable instance_type {}
 variable ssh_key {}
 
 
-data "aws_ami" "amazon-linux-image" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-output "ami_id" {
-  value = data.aws_ami.amazon-linux-image.id
-}
 
 
-resource "aws_security_group" "myapp-sg" {
-  name   = "myapp-sg"
-  vpc_id = aws_vpc.myapp-vpc.id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
 
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
-    prefix_list_ids = []
-  }
-
-  tags = {
-    Name = "${var.env_prefix}-sg"
-  }
-}
 
 
 
@@ -137,27 +98,6 @@ output "server-ip" {
     value = aws_instance.myapp-server.public_ip
 }
 
-resource "aws_instance" "myapp-server" {
-  ami                         = data.aws_ami.amazon-linux-image.id
-  instance_type               = var.instance_type
-  key_name                    = "myapp-key"
-  associate_public_ip_address = true
-  subnet_id                   = aws_subnet.myapp-subnet-1.id
-  vpc_security_group_ids      = [aws_security_group.myapp-sg.id]
-  availability_zone			      = var.avail_zone
-
-  tags = {
-    Name = "${var.env_prefix}-server"
-  }
-
-  user_data = <<EOF
-                 #!/bin/bash
-                 apt-get update && apt-get install -y docker-ce
-                 systemctl start docker
-                 usermod -aG docker ec2-user
-                 docker run -p 8080:8080 nginx
-              EOF
-}
 
 resource "aws_instance" "myapp-server-two" {
   ami                         = data.aws_ami.amazon-linux-image.id
