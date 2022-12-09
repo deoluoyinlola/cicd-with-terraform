@@ -74,11 +74,19 @@ I created a folder ``app-nginx`` which contains static files;
 3.) assets folder - holding pictures assets
 
 ### SSH into the Server
-
-
+- SSH into the linux server previously provision with terraform above by running the command; ``ssh -i <ssh-downloaded-path> ec2-user@<ip-address>``
+![ssh-nginx](assets/ssh-nginx.png)
 
 ### Install and Configure Nginx
+- Install Nginx; First, update the instance with ``sudo yum update`` Display should be similar to this;
+![yum-update](assets/yum-update.png)
+Then follow with nginx install; ``sudo amazon-linux-extras install nginx1``
+![nginx-install](assets/nginx-install.png)
+- Adjust Firewall; to enable firewall, run ``sudo ufw enable``
 
+- Check the server
+
+- Manage the Nginx Process
 
 
 ## Containerize With Docker

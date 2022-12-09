@@ -15,57 +15,35 @@ Deploy JS app to virtual machine from GitHub Action, while I use Terraform to pr
 ![design](docs/assets/designs.svg)
 
 ## Project Requirement
+- Accessible to over 500 users publicly
+- 
 
 ## Tools Used
 - [aws](https://aws.amazon.com/) - cloud platform, offering over 200 fully featured services from data centers globally.
 - [VSCode](https://code.visualstudio.com/) - preferred IDE 
 - [Docker](https://wwww.docker.com/) - to build the image and push the app
 - [terraform](https://www.terraform.io/) - the main iac tool
+- [nginx](https://www.nginx.com/) - open source web server that can also be used as a reverse proxy, load balancer.
+
 
 ## Project Deliverables
 
-This app shows a simple user profile app set up using 
-- index.html with pure js and css styles
-- nodejs backend with express module
-- mongodb for data storage
+A simple wait list app developing with html, css, js and serve with Nginx.
 
-All components are docker-based
-Yu can as well try it out locally on your machine without Docker, the choice is yours but I am going to explain how to with Docker;
-### With Docker
-
-#### To start the application
-
-Step 1: Create 
-
-
-Step 2: start 
-
-Step 3: start 
-
-Step 4: 
-  
-Step 5: create 
-
-Step 6: Start 
-
-  
-    
-Step 7: Access you nodejs application UI from browser
+#### To start the application on your local machine
+- 
 
     
-#### To start the application
-
+#### To start the application with Docker
 Step 1: start 
     
-Step 4: start 
-
-    
-Step 5: access the nodejs application from browser 
+Step 2: start 
 
    
 
-#### To build
-
+#### To build from the source code
+- clone the appropriate repo
+- cd into the file
     docker build -t app:1.0 .       
     
 The dot "." at the end of the command denotes location of the Dockerfile.
@@ -74,3 +52,5 @@ The dot "." at the end of the command denotes location of the Dockerfile.
 To better understand this project, I am documenting every steps, project code and every command line arguments that I used in completing this project. For this, I have created a separate README file inside the docs directory at the root directory for this project, the directory also holds some of the project assets(images and pictures)
 
 ## Lesson learnt
+- You can never be wrong with vendor documentation.
+- Stackoverflow is life saving, need be good with it.
