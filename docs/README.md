@@ -1,17 +1,18 @@
 
-A simple wait list app developing with html, css and js.
-Here is the project file structure; 
-![file structure](assets/file-structure.png)
-
 ## Project Overview
 * [IAC With Terraform](#iac-with-terraform)
   * [Authenticate to Provider(AWS)](#authenticate-to-provider)
   * [Provisioning Basic Infrastrucure](#provisioning-basic-infrastrucure)
-  * [Creating EC2 Instance](#Creating-ec2-instance)
-* [Continous Integration](#continous-integration)
+  * [Creating EC2 Instance](#creating-ec2-instance)
+* [Webserver With Nginx](#webserver-with-nginx)
   * [App Source Code](#app-source-code)
-  * [Multiple Services with Docker-compose](#multiple-services-with-docker-compose)
-  * [Build Image with Dockerfile](#build-image-with-dockerfile)
+  * [SSH into the Server](#ssh-into-the-server)
+  * [Install and Configure Nginx](#install-and-configure-nginx)
+* [Containerize With Docker](#containerize-with-docker)
+
+A simple wait list app developing with html, css and js. Part 1 cover how I provision infrastructure with Terraform, while Part 2 is about configuring nginx as webserver and Part 3 cover how I containarize the app with Docker
+Here is the project file structure; 
+![file structure](assets/file-structure.png)
 
 ## Hands-on
 From the architecture flow shown;
@@ -61,21 +62,29 @@ Move it to user profile
 ![ssh-confirm](assets/ssh-confirm.png)
 - Automate the ssh; set variable for the key-pair
 Getting the public from the .ssh/ folder. And reference the file location.
-
 - Finally, I ran ``terraform plan`` and ``terraform apply --auto-approve``
 
-## Continous Integration
-- Note that the same and following configuration can be achieve through `file` concept in terraform. I will just run all the commands in each line as I will on the shell. But for the sake of exploring alternative, will manually run all the commands direct inside the instance created.
+## Webserver With Nginx
+- Note that the same and following configuration can be achieve through `file` concept in terraform. I will just run all the commands in each line as I will on the shell. But for the sake of exploring alternative, will manually run all the commands direct inside the instance created. Also the last part will cover how I use GitHub Action to Dockerize the same app.
 
 ### App Source Code
-I am using HTML and JS for the Frontend and Nodejs for the Backend, listening at port 3000. Mongo-Express make it easier for me working with MongoDB instead of using CLI, listening it at port 8081.
-I created a folder ``app`` which contains static files;
+I created a folder ``app-nginx`` which contains static files;
 1.) index.html - UI/frontend
-2.) server.js - backend
-3.) images folder - holding my pictures assets
-NOTE; node_modules, package-lock.json and package.json are auto generated at the instance of installing npm for dependencies. While docker-compose.yaml is created at docker-compose session and .dockerignore created to basically ignore node_modules been commited to remote repo.
+2.) scripts.js - the logic
+3.) assets folder - holding pictures assets
 
-### Multiple Services with Docker-compose
+### SSH into the Server
+
+
+
+### Install and Configure Nginx
+
+
+
+## Containerize With Docker
+
+
+
 I will be using Docker-compose to run this app and other third-party(MongoDB and Mongo-Express for data persistence) services. From ``https://hub.docker.com`` I checked the doc for the right use of MongoDB and Mongo-Express image and its environment varibale configuration. The resulting configuration for the yaml file is saved with named ``docker-compose.yaml`` as part of application code.
 NOTE; In production scale, all the environment variable need to be well secured, and defined externally not as I expose it here.
 
