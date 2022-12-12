@@ -16,7 +16,8 @@ Deploy JS app to virtual machine from GitHub Action, while I use Terraform to pr
 
 ## Project Requirement
 - Accessible to over 500 users publicly
-- 
+- A simple waiting list app
+- Monolith with two-tiers
 
 ## Tools Used
 - [aws](https://aws.amazon.com/) - cloud platform, offering over 200 fully featured services from data centers globally.
@@ -27,27 +28,14 @@ Deploy JS app to virtual machine from GitHub Action, while I use Terraform to pr
 
 
 ## Project Deliverables
-
+![d-app](docs/assets/d-app.png)
 A simple wait list app developing with html, css, js and serve with Nginx.
 
 #### To start the application on your local machine
-- 
-
+- Fork or clone the repo;
+- cd into the directory;
+- Open the webpage with ``google-chrome index.html``
     
-#### To start the application with Docker
-Step 1: start 
-    
-Step 2: start 
-
-   
-
-#### To build from the source code
-- clone the appropriate repo
-- cd into the file
-    docker build -t app:1.0 .       
-    
-The dot "." at the end of the command denotes location of the Dockerfile.
-
 ## Documentation
 To better understand this project, I am documenting every steps, project code and every command line arguments that I used in completing this project. For this, I have created a separate README file inside the docs directory at the root directory for this project, the directory also holds some of the project assets(images and pictures)
 

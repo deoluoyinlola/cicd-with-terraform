@@ -9,6 +9,8 @@
   * [SSH into the Server](#ssh-into-the-server)
   * [Install and Configure Nginx](#install-and-configure-nginx)
 * [Containerize With Docker](#containerize-with-docker)
+  * [Build image with Dockerfile](#build-image-with-dockerfile)
+  * [Push to DockerHub](#push-to-dockerHub)
 
 A simple wait list app developing with html, css and js. Part 1 cover how I provision infrastructure with Terraform, while Part 2 is about configuring nginx as webserver and Part 3 cover how I containarize the app with Docker
 Here is the project file structure; 
@@ -80,21 +82,36 @@ I created a folder ``app-nginx`` which contains static files;
 ### Install and Configure Nginx
 - Install Nginx; First, update the instance with ``sudo yum update`` Display should be similar to this;
 ![yum-update](assets/yum-update.png)
+- Checking the list of services available in the instance; ``amazon-linux-extras list``
 Then follow with nginx install; ``sudo amazon-linux-extras install nginx1``
 ![nginx-install](assets/nginx-install.png)
-- Adjust Firewall; to enable firewall, run ``sudo ufw enable``
-
-- Check the server
-
-- Manage the Nginx Process
+- Getting to root of the instance use; ``sudo -s``
+- Check the webserver status; ``sudo yum search nginx``
+![nginx-search](assets/nginx-search.png)
+- Start the webserver; ``sudo service nginx start``
+![nginx-start](assets/nginx-start.png)
+- Copy the app source file remotely into the webserver;
+``scp -r -i ~/Downloads/ssh-ec2key.pem ~/Downloads/app-nginx ec2-user@34.207.110.17:~/var/www/``
+- Configure the webserver and the entrypoint;
 
 
 ## Containerize With Docker
-
-
-
-I will be using Docker-compose to run this app and other third-party(MongoDB and Mongo-Express for data persistence) services. From ``https://hub.docker.com`` I checked the doc for the right use of MongoDB and Mongo-Express image and its environment varibale configuration. The resulting configuration for the yaml file is saved with named ``docker-compose.yaml`` as part of application code.
-NOTE; In production scale, all the environment variable need to be well secured, and defined externally not as I expose it here.
+I created a sepate directory to dockerize this image ``app``. cd into the directory.
+NOTE; In production scale, all the environment variable need to be well secured, and defined externally.
 
 ### Build Image with Dockerfile
-Here, I define Dockerfile as the blueprint for building the image, which contain a copy of the application source code and its dependencies. Following is what I expected if I start a container from this image; I based the image on ``node:13-alpine`` image so all execution follow Linux command, define env internally, create a /home/app directory, from the host machine copy the current folder files to /home/app, I then start the app with ``node server.js`` - the entrypoint command. I commited this file to my remote repo at the root as can be seen from the file structure.
+Here, I define Dockerfile as the blueprint for building the image, which contain a copy of the application source code and its dependencies. Following is what I expected if I start a container from this image; I based the image on ``node:13-alpine`` image so all execution follow Linux command, define env internally, create a /home/app directory, from the host machine copy the current folder files to /home/app, then can start the app with ``google-chrome index.html`` - the entrypoint command. I commited this file to my remote repo at the root as can be seen from the file structure. Run the following commands;
+- I named the app 'waitee'; ``docker build . -t waitee:1.0``. Then check if is build locally.
+![check-im](assets/check-im.png)
+
+### Push to DockerHub
+- I logged in with ``docker login``
+- First, I name the local image using my Docker Hub username and the repository name that I created through Docker Hub on the web; 
+``docker build -t deoluoyinlola/waitee:1.0 .``
+![docker-build](assets/docker-build.png)
+- Push to my remote repo;
+``docker push deoluoyinlola/waitee:1.0``
+- Confirm the push successed;
+![docker-image](assets/docker-image.png)
+
+Voila!!!
